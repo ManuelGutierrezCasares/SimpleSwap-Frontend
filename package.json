@@ -1,0 +1,20 @@
+{
+  "name": "simpleswap-frontend",
+  "version": "1.0.0",
+  "description": "- This contract is fixated to use two tokens only; these are set when the first user adds liquidity to the management pool.\r - This contract allows the user to do the following:\r     - Add Liquidity to the management pool.\r     - Remove Liquidity from the management pool.\r     - Swap tokens.\r     - Get Price of a token based on another.\r     - Get amount of tokens that the user would receive.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.0.0",
+    "hardhat": "^2.25.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.3.0",
+    "dotenv": "^17.2.0"
+  }
+}
