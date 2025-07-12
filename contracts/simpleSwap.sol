@@ -10,14 +10,14 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 /// @custom:experimental This is an experimental contract.
 
 contract SimpleSwap is ERC20 {
-    address private _tokenA;
-    address private _tokenB;
+    address public _tokenA;
+    address public _tokenB;
 
     constructor() ERC20("liquidity", "LQD") {}
 
     /// @dev Users are able to add liquidity to the management pool.
     /// @dev It's a must to use this function to initialize the management pool.
-    function addLiquidity(address tokenA, address tokenB, uint amountADesired, uint amountBDesired, uint amountAMin, uint amountBMin, address to, uint deadline) external returns (uint amountA, uint amountB, uint liquidity) {
+    function addLiquidity(address tokenA, address tokenB, uint amountADesired, uint amountBDesired) external returns (uint amountA, uint amountB, uint liquidity) {
         address __tokenA = _tokenA;
         address __tokenB = _tokenB;
 
@@ -46,7 +46,7 @@ contract SimpleSwap is ERC20 {
     }
 
     /// @dev Users are able to withdraw their tokens based on their current liquidity token amount.
-    function removeLiquidity(address tokenA, address tokenB, uint liquidity, uint amountAMin, uint amountBMin, address to, uint deadline) external returns (uint amountA, uint amountB) {
+    function removeLiquidity(address tokenA, address tokenB, uint liquidity, uint amountAMin, uint amountBMin) external returns (uint amountA, uint amountB) {
         address __tokenA = _tokenA;
         address __tokenB = _tokenB;
         
@@ -78,7 +78,7 @@ contract SimpleSwap is ERC20 {
     }
 
     /// @dev Swaps one token for another in exact amounts.
-    function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts) {
+    function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path) external returns (uint[] memory amounts) {
         address __tokenA = _tokenA;
         address __tokenB = _tokenB;
         

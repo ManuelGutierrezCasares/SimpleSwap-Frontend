@@ -1,4 +1,4 @@
-# Manuel Gutierrez Casares's Ethereum SimpleSwap
+# Manuel Gutierrez Casares's Ethereum SimpleSwap FrontEnd Implementation
 
 ## Usage:
 - This contract is fixated to use two tokens only; these are set when the first user adds liquidity to the management pool.
