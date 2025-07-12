@@ -55,17 +55,16 @@ async function handleSubmit() {
             tokenA.mint(100000000);
             tokenB.approve(signerAddress);
             tokenB.mint(100000000);
-            let contractSigned = new ethers.Contract(contractAddress, contractAbi, signer);
-            const tx = await contractSigned.addLiquidity(tokenAAddress, tokenBAddress, 100, 50);
-            await tx.wait();
-            updateLiquidity();
         }
+        let contractSigned = new ethers.Contract(contractAddress, contractAbi, signer);
+        let tx = await contractSigned.addLiquidity(tokenAAddress, tokenBAddress, 100, 50);
+        await tx.wait();
+        updateLiquidity();
         
         if (isNaN(amountTokenA) || isNaN(amountTokenB)) {
             alert('You need to use numbers.')
         } else {
-            let contractSigned = new ethers.Contract(contractAddress, contractAbi, signer);
-            const tx = await contractSigned.swapExactTokensForTokens(Number(amountTokenA), Number(amountTokenB), [tokenAAddress, tokenBAddress]);
+            tx = await contractSigned.swapExactTokensForTokens(Number(amountTokenA), Number(amountTokenB), [tokenAAddress, tokenBAddress]);
             await tx.wait();
             updateLiquidity();
             alert('Your transaction has been completed. Congratulations.')
