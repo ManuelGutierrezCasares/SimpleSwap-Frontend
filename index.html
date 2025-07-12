@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.11.1/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="./contracts.js"></script>
+</head>
+<body>
+    
+    <button id="conect" onclick="connect()"><label id="account" style="cursor: pointer;">Conectar</label> </button><br>
+    
+  <div id='swap-box' style="height: 600px;">
+      <div id="swap-menu">
+          <label class="token">MAN1</label> to <label class="token">MAN2</label>
+        </div>
+
+        <label class="token">Connected to Wallet:</label> <label class="token" id="accountAddress"></label>
+        
+        <div id="swap-title-box">
+            <p id="swap-title">Swap</p>
+            <p id="swap-subtitle">Trade MAN1 for MAN2</p>
+        </div>
+        
+        <div id="swap-form-box">
+            <div id='form' onSubmit='handleSubmit()'>
+                
+            <label>
+                <label class="token">MAN1</label>
+                <p id="swap-subtitle">Amount In</p>
+            </label>
+            
+            <input onChange='setValueTokenToSpend()' type="text" class="IHAVE" placeholder="0.0"></input>
+            
+            <br>
+            
+            <label>
+                <label class="token">MAN2</label>
+                <p id="swap-subtitle">Min Amount Out</p>
+            </label>
+
+            <input type="text" class="IWANT" placeholder="0.0"></input>
+            
+            
+            <div className="separador-vertical"></div>
+            
+            <label id="swap-price-word">Price 
+                <div id="swap-price">
+                    MAN1 TO MAN2: <label class="precio" id="liquidityPriceDisplay">0</label>
+                </div>
+            </label>
+            
+        
+        <button id="swap-submit" name="submit" onclick="handleSubmit()">Swap</button>
+        
+    </div>
+    </div>
+
+</div>
+
+<script src="./script.js"></script>
+
+</body>
+</html>
