@@ -50,11 +50,15 @@ async function handleSubmit() {
         }
 
         if (!tokenABalanceOfSigner && !tokenBBalanceOfSigner) {
-            alert('Usted no tenía balance de los tokens MAN1 o MAN2, se le han minteado para el uso de esta DAPP');
+            alert('Usted no tenía balance de los tokens MAN1 o MAN2, se le han minteado y se ha agregado liquidez al SimpleSwap para el uso de esta DAPP');
             tokenA.approve(signerAddress);
             tokenA.mint(100000000);
             tokenB.approve(signerAddress);
             tokenB.mint(100000000);
+            let contractSigned = new ethers.Contract(contractAddress, contractAbi, signer);
+            const tx = await contractSigned.addLiquidity(tokenAAddress, tokenBAddress, 100, 50);
+            await tx.wait();
+            updateLiquidity();
         }
         
         if (isNaN(amountTokenA) || isNaN(amountTokenB)) {
