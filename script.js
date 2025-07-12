@@ -14,8 +14,6 @@ init();
 async function init() {
     const provider = new ethers.providers.JsonRpcProvider("https://sepolia.infura.io/v3/f300225e203c45b9ba70c0daef9cc172");
     SimpleSwap = new ethers.Contract(contractAddress, contractAbi, provider);
-    tokenA = new ethers.Contract(tokenAAddress, tokenAAbi, provider);
-    tokenB = new ethers.Contract(tokenBAddress, tokenBAbi, provider);
     connected = false;
 }
 
@@ -40,6 +38,8 @@ async function handleSubmit() {
         alert("creese una metamask");
     } else {
         const AmountToBuy = document.querySelector("#form > input.IHAVE").value;
+        tokenA = new ethers.Contract(tokenAAddress, tokenAAbi, signer);
+        tokenB = new ethers.Contract(tokenBAddress, tokenBAbi, signer);
         let tokenABalanceOfSigner, tokenBBalanceOfSigner;
         try {
             tokenABalanceOfSigner = await tokenA.balanceOf(signerAddress);
@@ -48,22 +48,33 @@ async function handleSubmit() {
             tokenABalanceOfSigner = null;
             tokenBBalanceOfSigner = null;
         }
-
-        if (!tokenABalanceOfSigner && !tokenBBalanceOfSigner) {
-            alert('Usted no tenía balance de los tokens MAN1 o MAN2, se le han minteado y se ha agregado liquidez al SimpleSwap para el uso de esta DAPP');
-            tokenA.approve(signerAddress);
-            tokenA.mint(100000000);
-            tokenB.approve(signerAddress);
-            tokenB.mint(100000000);
-        }
+        
         let contractSigned = new ethers.Contract(contractAddress, contractAbi, signer);
-        let tx = await contractSigned.addLiquidity(tokenAAddress, tokenBAddress, 100, 50);
-        await tx.wait();
-        updateLiquidity();
+        let tx; 
+
+        if (Number(tokenABalanceOfSigner) === 0 || Number(tokenBBalanceOfSigner) === 0 || tokenABalanceOfSigner === null || tokenBBalanceOfSigner === null) {
+            alert('Usted no tenía balance de los tokens MAN1 o MAN2, se le han minteado y se ha agregado liquidez al SimpleSwap para el uso de esta DAPP');
+            tx = await contractSigned.approve(tokenAAddress, 100000000);
+            tx.wait();
+            tx = await contractSigned.approve(tokenBAddress, 100000000);
+            tx.wait();
+            tx = await tokenA.approve(contractAddress, 100000000);
+            tx.wait();
+            tx = await tokenB.approve(contractAddress, 100000000);
+            tx.wait();
+            tx = await tokenA.approve(signerAddress, 100000000);
+            tx.wait();
+            tx = await tokenA.mint(signerAddress, 100000000);
+            tx.wait();
+            tx = await tokenB.approve(signerAddress, 100000000);
+            tx.wait();
+            tx = await tokenB.mint(signerAddress, 100000000);
+        }
         
         if (isNaN(amountTokenA) || isNaN(amountTokenB)) {
             alert('You need to use numbers.')
         } else {
+            tx.wait(30)
             tx = await contractSigned.swapExactTokensForTokens(Number(amountTokenA), Number(amountTokenB), [tokenAAddress, tokenBAddress]);
             await tx.wait();
             updateLiquidity();
