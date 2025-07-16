@@ -7,8 +7,6 @@ let amountTokenA;
 let amountTokenB;
 let signer;
 
-
-
 init();
 
 async function init() {
@@ -37,7 +35,7 @@ async function handleSubmit() {
     if (!connected) {
         alert("creese una metamask");
     } else {
-        const AmountToBuy = document.querySelector("#form > input.IHAVE").value;
+        setValueTokenToSpend();
         tokenA = new ethers.Contract(tokenAAddress, tokenAAbi, signer);
         tokenB = new ethers.Contract(tokenBAddress, tokenBAbi, signer);
         let tokenABalanceOfSigner, tokenBBalanceOfSigner;
@@ -54,27 +52,25 @@ async function handleSubmit() {
 
         if (Number(tokenABalanceOfSigner) === 0 || Number(tokenBBalanceOfSigner) === 0 || tokenABalanceOfSigner === null || tokenBBalanceOfSigner === null) {
             alert('Usted no tenía balance de los tokens MAN1 o MAN2, se le han minteado y se ha agregado liquidez al SimpleSwap para el uso de esta DAPP');
-            tx = await contractSigned.approve(tokenAAddress, 100000000);
-            tx.wait();
-            tx = await contractSigned.approve(tokenBAddress, 100000000);
+            tx = await tokenA.mint(signerAddress, 100000000);
             tx.wait();
             tx = await tokenA.approve(contractAddress, 100000000);
             tx.wait();
+            tx = await tokenB.mint(signerAddress, 100000000);
+            tx.wait();
             tx = await tokenB.approve(contractAddress, 100000000);
             tx.wait();
-            tx = await tokenA.approve(signerAddress, 100000000);
+            tx = await contractSigned.approve(tokenAAddress, 100000000);
             tx.wait();
-            tx = await tokenA.mint(signerAddress, 100000000);
+            tx = await contractSigned.approve(tokenBAddress, 100000000);
+            tx.wait();    
+            tx = await contractSigned.addLiquidity(tokenAAddress, tokenBAddress, 1000000, 500000)
             tx.wait();
-            tx = await tokenB.approve(signerAddress, 100000000);
-            tx.wait();
-            tx = await tokenB.mint(signerAddress, 100000000);
         }
         
         if (isNaN(amountTokenA) || isNaN(amountTokenB)) {
             alert('You need to use numbers.')
         } else {
-            tx.wait(30)
             tx = await contractSigned.swapExactTokensForTokens(Number(amountTokenA), Number(amountTokenB), [tokenAAddress, tokenBAddress]);
             await tx.wait();
             updateLiquidity();
@@ -89,6 +85,6 @@ async function updateLiquidity() {
 }
 
 function setValueTokenToSpend() {
-	amountTokenA = document.getElementsByClassName("IHAVE")[0].value;
-	amountTokenB = document.getElementsByClassName("IWANT")[0].value;
+	amountTokenA = Number(document.getElementsByClassName("IHAVE")[0].value);
+	amountTokenB = Number(document.getElementsByClassName("IWANT")[0].value);
 }
